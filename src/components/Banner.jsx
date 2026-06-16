@@ -1,111 +1,93 @@
 "use client";
+import { Button } from "@heroui/react";
+import Link from "next/link";
+import { FaRocket } from "react-icons/fa";
+import { motion } from "motion/react";
 
-import React, { useCallback, useEffect, useState, useRef } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
+const Hero = () => {
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.15,
+                delayChildren: 0.1,
+            },
+        },
+    };
 
-const banners = [
-  "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=80", // Cyberpunk Microchip & Tech Circuit
-  "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=80", // Futuristic Neon Geometric Tech Abstract
-  "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1600&q=80", // Digital Matrix & Cyber Security Code
-  "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1600&q=80", // High-Tech Server Room & AI Core
-  "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1600&q=80", // Web3, Blockchain & Quantum Computing
-  "https://images.unsplash.com/photo-1544256718-3bcf237f3974?auto=format&fit=crop&w=1600&q=80"  // Modern Software Developer Coding Setup
-];
+    const itemVariants = {
+        hidden: { opacity: 0, y: 30, filter: "blur(4px)" },
+        visible: {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            transition: { type: "spring", stiffness: 100, damping: 18 },
+        },
+    };
 
-export default function BannerSlider() {
-  const autoplay = useRef(
-    Autoplay({
-      delay: 4000,
-      stopOnInteraction: false,
-      stopOnMouseEnter: true,
-    })
-  );
+    return (
+        <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-6">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,_var(--tw-gradient-stops))] from-[#dfcbaf]/40 via-[#ebdcc9] to-[#ebdcc9] -z-10" />
+            <div className="absolute top-1/4 left-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-[#dfcbaf]/30 to-transparent rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 -z-10" />
 
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    { loop: true, duration: 30 }, 
-    [autoplay.current]
-  );
-
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-
-    onSelect();
-    emblaApi.on("select", onSelect);
-
-    return () => emblaApi.off("select", onSelect);
-  }, [emblaApi, onSelect]);
-
-  return (
-    <div className="relative w-full max-w-7xl mx-auto px-4 md:px-0">
-      <div
-        className="relative overflow-hidden rounded-2xl md:rounded-3xl mt-4 border border-zinc-800/50 shadow-2xl shadow-black/40 group"
-        ref={emblaRef}
-      >
-        <div className="flex">
-          {banners.map((banner, index) => (
-            <div
-              key={index}
-              className="relative flex-[0_0_100%] h-[180px] sm:h-[280px] md:h-[420px] lg:h-[480px] w-full bg-zinc-950"
+            <motion.div 
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="max-w-5xl text-center space-y-8"
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 z-10 pointer-events-none" />
-              
-              <Image
-                src={banner}
-                alt={`Premium Banner ${index + 1}`}
-                fill
-                priority={index === 0}
-                className="object-fill object-center transition-transform duration-700 select-none"
-                unoptimized // এক্সটার্নাল ইমেজ যদি নেক্সটজেএস-এ রেন্ডার হতে সমস্যা করে
-              />
-            </div>
-          ))}
-        </div>
+                <motion.div
+                    variants={itemVariants}
+                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#2c221e]/20 bg-[#2c221e]/5 text-[#2c221e] text-xs font-semibold uppercase tracking-wider cursor-default"
+                >
+                    <FaRocket className="animate-pulse" /> Introducing Ticketo v2.0
+                </motion.div>
 
-        {/* মডার্ন গ্লাস-মরফিজম নেভিগেশন বাটন (গ্রুপ হোভারে স্লাইড ইন হবে) */}
-        {/* Previous Button */}
-        <button
-          onClick={() => emblaApi?.scrollPrev()}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 rounded-xl bg-zinc-900/40 hover:bg-zinc-900/80 border border-white/10 text-white/80 hover:text-white p-3 backdrop-blur-md shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 pointer-events-auto hidden md:flex items-center justify-center"
-          aria-label="Previous Slide"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
+                <motion.h1
+                    variants={itemVariants}
+                    className="text-5xl md:text-7xl font-extrabold tracking-tight text-[#2c221e] leading-tight"
+                >
+                    Discover Premium Events &{" "}
+                    <span className="bg-gradient-to-r from-[#2c221e] via-[#5c4a3c] to-[#2c221e] bg-clip-text text-transparent">
+                        Book Tickets
+                    </span>{" "}
+                    Seamlessly
+                </motion.h1>
 
-        {/* Next Button */}
-        <button
-          onClick={() => emblaApi?.scrollNext()}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 rounded-xl bg-zinc-900/40 hover:bg-zinc-900/80 border border-white/10 text-white/80 hover:text-white p-3 backdrop-blur-md shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 pointer-events-auto hidden md:flex items-center justify-center"
-          aria-label="Next Slide"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
+                <motion.p
+                    variants={itemVariants}
+                    className="text-[#2c221e]/70 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
+                >
+                    Ticketo links passionate organizers with eager attendees. Browse local festivals, grand music nights, elite business seminars, and everything in between.
+                </motion.p>
 
-        {/* আল্ট্রা-মডার্ন ডট ইন্ডিকেটরস (ক্যাপসুল স্টাইল) */}
-        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-1.5 z-20 bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/5">
-          {banners.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => emblaApi?.scrollTo(index)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                selectedIndex === index
-                  ? "w-6 bg-gradient-to-r from-pink-500 to-indigo-500 shadow-md shadow-pink-500/20"
-                  : "w-1.5 bg-white/40 hover:bg-white/70"
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+                <motion.div
+                    variants={itemVariants}
+                    className="flex flex-col sm:flex-row justify-center items-center gap-4"
+                >
+                    <Link href="/events" className="w-full sm:w-auto">
+                        <Button
+                            className="bg-[#2c221e] text-[#ebdcc9] font-bold h-14 px-8 text-md shadow-xl shadow-[#2c221e]/15 hover:shadow-[#2c221e]/30 hover:scale-105 active:scale-98 transition-all w-full sm:w-auto"
+                            radius="full"
+                        >
+                            Explore Events
+                        </Button>
+                    </Link>
+
+                    <Link href="/" className="w-full sm:w-auto">
+                        <Button
+                            variant="bordered"
+                            className="border-[#2c221e]/30 hover:bg-[#2c221e]/5 hover:border-[#2c221e] hover:scale-105 active:scale-98 text-[#2c221e] font-semibold h-14 px-8 text-md w-full sm:w-auto border-2 transition-all"
+                            radius="full"
+                        >
+                            Create Organization
+                        </Button>
+                    </Link>
+                </motion.div>
+            </motion.div>
+        </section>
+    );
+};
+
+export default Hero;
