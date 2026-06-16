@@ -17,8 +17,10 @@ import { motion } from "motion/react";
 import { Sparkles, Calendar, ArrowUpRight } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
+  const router=useRouter()
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -33,8 +35,8 @@ export default function SignInPage() {
   const handleGoogleSignIn = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/",
     });
+    router.push('/')
   };
 
   return (

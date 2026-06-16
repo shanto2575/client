@@ -14,7 +14,7 @@ import {
   Select,
   TextField,
 } from "@heroui/react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import React from "react";
 import { motion } from "motion/react";
 import { Sparkles, Calendar, ArrowUpRight } from "lucide-react";
@@ -37,12 +37,14 @@ export default function SignUpPage() {
     router.push('/');
   };
 
-  const handleGoogleSignUp = async () => {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/",
-    });
-  };
+  
+const handleGoogleSignIn = async () => {
+  const data = await authClient.signIn.social({
+    provider: "google",
+    callbackURL: "/",
+  });
+
+};
 
   return (
     <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-12 bg-[#ebdcc9] text-[#2c221e] overflow-hidden select-none">
@@ -193,8 +195,8 @@ export default function SignUpPage() {
                   </div>
 
                   <button
-                    type="button"
-                    onClick={handleGoogleSignUp}
+                    // type="button"
+                    onClick={handleGoogleSignIn}
                     className="w-full flex items-center justify-center gap-3 bg-white/40 hover:bg-white/60 border border-[#dfcbaf] text-[#2c221e] font-bold text-sm py-3.5 rounded-xl transition-all duration-300 shadow-sm cursor-pointer"
                   >
                     <FcGoogle size={20} />
