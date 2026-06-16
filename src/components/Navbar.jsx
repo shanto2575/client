@@ -12,88 +12,94 @@ import { MdDashboard } from "react-icons/md";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const { data: session } = authClient.useSession();
   const user = session?.user;
-  
-  const pathname=usePathname()
-  // console.log(pathname)
-  if(pathname.includes('dashboard')){
+  const pathname = usePathname();
+
+  if (pathname.includes('dashboard')) {
     return null;
   }
-
 
   const handleSignOut = async () => {
     await authClient.signOut();
   };
-  return (
-    <div>
 
-      <nav className="sticky top-0 z-40 w-full border-b border-separator bg-background/70 backdrop-blur-lg">
-        <header className="mx-auto flex h-16 max-w-7xl items-center justify-between px-2">
+  const isActive = (path) => pathname === path;
+
+  return (
+    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-7xl">
+      <nav className="w-full border border-[#dfcbaf] bg-[#ebdcc9] text-[#2c221e] rounded-2xl shadow-lg shadow-[#2c221e]/5 backdrop-blur-md">
+        <header className="flex h-14 items-center justify-between px-6">
+          
+          {/* LEFT SIDE: LOGO & MOBILE HAMBURGER */}
           <div className="flex items-center gap-4">
             <button
-              className="md:hidden"
+              className="md:hidden text-[#2c221e] p-1 rounded-lg hover:bg-[#2c221e]/5 transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"
-              aria-expanded={isMenuOpen}
             >
-              <span className="sr-only">Menu</span>
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isMenuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 )}
               </svg>
             </button>
-            <Link href={'/'}>
-              <div className="flex items-center gap-3">
+            
+            <Link href={'/'} className="hover:opacity-90 transition-opacity">
+              <div className="flex items-center gap-2.5">
                 <Image
-                  height={40}
-                  width={40}
+                  height={32}
+                  width={32}
                   loading="eager"
                   src="/logo.webp"
                   alt="logo"
+                  className="w-8 h-8 object-contain"
                 />
-                <p className="font-bold">Shanto</p>
+                <span className="font-extrabold tracking-tight text-sm uppercase">Shanto</span>
               </div>
             </Link>
           </div>
-          <ul className="hidden items-center gap-4 md:flex">
+
+          {/* MIDDLE SIDE: MODERN NAVIGATION LINKS */}
+          <ul className="hidden items-center gap-1 md:flex text-xs font-semibold tracking-wide uppercase">
             <li>
-              <Link
-                href="#"
-                className="font-medium text-accent"
-                aria-current="page"
+              <Link 
+                href="/" 
+                className={`px-4 py-1.5 rounded-xl transition-all ${
+                  isActive('/') 
+                    ? "bg-[#2c221e] text-[#ebdcc9]" 
+                    : "hover:bg-[#2c221e]/5 text-[#2c221e]/80 hover:text-[#2c221e]"
+                }`}
               >
-                Browse Products
+                Home
               </Link>
             </li>
             <li>
-              <Link href="/pricing">Pricing</Link>
+              <Link
+                href="/products"
+                className={`px-4 py-1.5 rounded-xl transition-all ${
+                  isActive('/products') 
+                    ? "bg-[#2c221e] text-[#ebdcc9]" 
+                    : "hover:bg-[#2c221e]/5 text-[#2c221e]/80 hover:text-[#2c221e]"
+                }`}
+              >
+                Products
+              </Link>
             </li>
           </ul>
+
+          {/* RIGHT SIDE: AUTH BUTTONS / USER PROFILE */}
           {!user && (
-            <div className="hidden items-center gap-4 md:flex">
-              <Link href="/signin">Login</Link>
+            <div className="hidden items-center gap-4 md:flex text-xs font-bold tracking-wide uppercase">
+              <Link href="/signin" className="text-[#2c221e]/80 hover:text-[#2c221e] transition-colors px-2 py-1">
+                Login
+              </Link>
               <Link href="/signup">
-                <Button>Sign Up</Button>
+                <Button className="bg-[#2c221e] text-[#ebdcc9] font-bold text-xs uppercase tracking-wider h-9 px-5 shadow-md shadow-[#2c221e]/10 hover:shadow-[#2c221e]/20 transition-all" radius="xl">
+                  Sign Up
+                </Button>
               </Link>
             </div>
           )}
@@ -101,59 +107,37 @@ const Navbar = () => {
           {user && (
             <div className="hidden items-center gap-4 md:flex">
               <Dropdown>
-                <Dropdown.Trigger className="rounded-full">
-                  <Avatar size="sm" aria-label="Menu">
-                    <Avatar.Image
-                      referrerPolicy="no-referrer"
-                      alt="John Doe"
-                      src={user?.image}
-                    />
-                    <Avatar.Fallback>{user.name.charAt(0)}</Avatar.Fallback>
+                <Dropdown.Trigger className="rounded-full cursor-pointer p-0.5 border border-[#dfcbaf] hover:border-[#2c221e]/40 transition-colors">
+                  <Avatar size="sm" className="w-7 h-7 cursor-pointer" aria-label="Menu">
+                    <Avatar.Image referrerPolicy="no-referrer" alt={user?.name} src={user?.image} />
+                    <Avatar.Fallback className="bg-[#2c221e] text-[#ebdcc9] text-xs">{user?.name?.charAt(0)}</Avatar.Fallback>
                   </Avatar>
                 </Dropdown.Trigger>
-                <Dropdown.Popover>
-                  <div className="px-3 pt-3 pb-1">
-                    <div className="flex items-center gap-2">
-                      <Avatar size="sm">
-                        <Avatar.Image alt={user?.name} src={user?.image} />
-                        <Avatar.Fallback delayMs={600}>JD</Avatar.Fallback>
-                      </Avatar>
-                      <div className="flex flex-col gap-0">
-                        <p className="text-sm leading-5 font-medium">
-                          {user?.name}
-                        </p>
-                        <p className="text-xs leading-none text-muted">
-                          {user?.email}
-                        </p>
-                      </div>
-                    </div>
+                <Dropdown.Popover className="bg-[#ebdcc9] border border-[#dfcbaf] shadow-xl rounded-2xl min-w-[200px] mt-1">
+                  <div className="px-4 py-3 border-b border-[#dfcbaf]/50">
+                    <p className="text-xs font-extrabold text-[#2c221e] truncate">{user?.name}</p>
+                    <p className="text-[10px] text-[#2c221e]/60 truncate mt-0.5">{user?.email}</p>
                   </div>
-                  <Dropdown.Menu
-                    onAction={(key) => console.log(`Selected: ${key}`)}
-                  >
-                    <Dropdown.Item id="new-file" textValue="New file">
-                      <Link
-                        className="flex items-center gap-2"
-                        href={`/dashboard/${user?.role}`}
-                      >
-                        <MdDashboard />
-                        <Label>Dashboard</Label>
+                  <Dropdown.Menu className="text-[#2c221e] p-1.5 gap-1">
+                    <Dropdown.Item id="dashboard" textValue="Dashboard" className="hover:bg-[#2c221e]/5 rounded-xl p-2 transition-colors">
+                      <Link className="flex items-center gap-2.5 w-full h-full text-xs font-semibold text-[#2c221e]" href={`/dashboard/${user?.role}`}>
+                        <MdDashboard className="w-4 h-4 opacity-80" />
+                        <Label className="cursor-pointer">Dashboard</Label>
                       </Link>
                     </Dropdown.Item>
 
-                    <Dropdown.Item id="copy-link" textValue="Copy link">
-                      <CgProfile />
-                      <Label>Profile</Label>
+                    <Dropdown.Item id="profile" textValue="Profile" className="hover:bg-[#2c221e]/5 rounded-xl p-2 transition-colors">
+                      <div className="flex items-center gap-2.5 text-xs font-semibold text-[#2c221e]">
+                        <CgProfile className="w-4 h-4 opacity-80" />
+                        <Label className="cursor-pointer">Profile</Label>
+                      </div>
                     </Dropdown.Item>
 
-                    <Dropdown.Item
-                      id="delete-file"
-                      textValue="Delete file"
-                      variant="danger"
-                      onClick={handleSignOut}
-                    >
-                      <BiLogOut />
-                      <Label>Logout</Label>
+                    <Dropdown.Item id="logout" textValue="Logout" variant="danger" className="hover:bg-red-500/10 text-red-600 rounded-xl p-2 transition-colors" onClick={handleSignOut}>
+                      <div className="flex items-center gap-2.5 text-xs font-semibold">
+                        <BiLogOut className="w-4 h-4" />
+                        <Label className="cursor-pointer">Logout</Label>
+                      </div>
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown.Popover>
@@ -161,29 +145,25 @@ const Navbar = () => {
             </div>
           )}
         </header>
+
+        {/* MOBILE MENU PANEL */}
         {isMenuOpen && (
-          <div className="border-t border-separator md:hidden">
-            <ul className="flex flex-col gap-2 p-4">
+          <div className="border-t border-[#dfcbaf] md:hidden bg-[#ebdcc9] rounded-b-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+            <ul className="flex flex-col gap-1 p-4 text-xs font-bold uppercase tracking-wide">
               <li>
-                <Link href="#" className="block py-2">
-                  Features
-                </Link>
+                <Link href="/" className="block py-2 px-3 rounded-xl hover:bg-[#2c221e]/5">Features</Link>
               </li>
               <li>
-                <Link href="#" className="block py-2 font-medium text-accent">
-                  Dashboard
-                </Link>
+                <Link href="/dashboard" className="block py-2 px-3 rounded-xl text-[#2c221e] bg-[#2c221e]/5">Dashboard</Link>
               </li>
               <li>
-                <Link href="#" className="block py-2">
-                  Pricing
-                </Link>
+                <Link href="#" className="block py-2 px-3 rounded-xl hover:bg-[#2c221e]/5">Pricing</Link>
               </li>
-              <li className="mt-4 flex flex-col gap-2 border-t border-separator pt-4">
-                <Link href="#" className="block py-2">
-                  Login
-                </Link>
-                <Button className="w-full">Sign Up</Button>
+              <li className="mt-2 pt-3 border-t border-[#dfcbaf] flex flex-col gap-2">
+                <Link href="/signin" className="block py-2 text-center hover:bg-[#2c221e]/5 rounded-xl">Login</Link>
+                <Button className="w-full bg-[#2c221e] text-[#ebdcc9] font-bold text-xs uppercase tracking-wider h-10" radius="xl">
+                  Sign Up
+                </Button>
               </li>
             </ul>
           </div>
