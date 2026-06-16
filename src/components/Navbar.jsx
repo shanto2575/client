@@ -4,7 +4,7 @@ import { authClient } from "@/lib/auth-client";
 import { Avatar, Button, Dropdown, Label } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { BiLogOut } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
@@ -15,6 +15,7 @@ const Navbar = () => {
   const { data: session } = authClient.useSession();
   const user = session?.user;
   const pathname = usePathname();
+  const router = useRouter();
 
   if (pathname.includes('dashboard')) {
     return null;
@@ -22,6 +23,14 @@ const Navbar = () => {
 
   const handleSignOut = async () => {
     await authClient.signOut();
+    router.refresh(); // সাইন আউট হওয়ার পর পেজ রিফ্রেশ বা রিডাইরেক্টের জন্য
+  };
+
+  // ড্রপডাউন ক্লিকের জন্য অ্যাকশন হ্যান্ডলার
+  const handleDropdownAction = (key) => {
+    if (key === "logout") {
+      handleSignOut();
+    }
   };
 
   const isActive = (path) => pathname === path;
@@ -62,7 +71,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* MIDDLE SIDE: MODERN NAVIGATION LINKS */}
+          {/* MIDDLE SIDE: NAVIGATION LINKS */}
           <ul className="hidden items-center gap-1 md:flex text-xs font-semibold tracking-wide uppercase">
             <li>
               <Link 
@@ -118,27 +127,52 @@ const Navbar = () => {
                     <p className="text-xs font-extrabold text-[#2c221e] truncate">{user?.name}</p>
                     <p className="text-[10px] text-[#2c221e]/60 truncate mt-0.5">{user?.email}</p>
                   </div>
-                  <Dropdown.Menu className="text-[#2c221e] p-1.5 gap-1">
-                    <Dropdown.Item id="dashboard" textValue="Dashboard" className="hover:bg-[#2c221e]/5 rounded-xl p-2 transition-colors">
-                      <Link className="flex items-center gap-2.5 w-full h-full text-xs font-semibold text-[#2c221e]" href={`/dashboard/${user?.role}`}>
+                  
+                  {/* ফিক্স ১: onAction এর মাধ্যমে ক্লিক ইভেন্ট হ্যান্ডেল করা হয়েছে */}
+                  <Dropdown.Menu 
+                    className="text-[#2c221e] p-1.5 gap-1"
+                    onAction={handleDropdownAction}
+                  >
+                    
+                    {/* ফিক্স ২: Link কম্পোনেন্ট সরাসরি as={Link} দিয়ে ক্লাইন সাইড রাউটিং ফিক্স করা হয়েছে */}
+                    <Dropdown.Item 
+                      key="dashboard" 
+                      as={Link} 
+                      href={`/dashboard/${user?.role}`}
+                      textValue="Dashboard" 
+                      className="hover:bg-[#2c221e]/5 rounded-xl p-2 transition-colors"
+                    >
+                      <div className="flex items-center gap-2.5 text-xs font-semibold text-[#2c221e]">
                         <MdDashboard className="w-4 h-4 opacity-80" />
                         <Label className="cursor-pointer">Dashboard</Label>
-                      </Link>
+                      </div>
                     </Dropdown.Item>
 
-                    <Dropdown.Item id="profile" textValue="Profile" className="hover:bg-[#2c221e]/5 rounded-xl p-2 transition-colors">
+                    <Dropdown.Item 
+                      key="profile" 
+                      as={Link} 
+                      href="/profile"
+                      textValue="Profile" 
+                      className="hover:bg-[#2c221e]/5 rounded-xl p-2 transition-colors"
+                    >
                       <div className="flex items-center gap-2.5 text-xs font-semibold text-[#2c221e]">
                         <CgProfile className="w-4 h-4 opacity-80" />
                         <Label className="cursor-pointer">Profile</Label>
                       </div>
                     </Dropdown.Item>
 
-                    <Dropdown.Item id="logout" textValue="Logout" variant="danger" className="hover:bg-red-500/10 text-red-600 rounded-xl p-2 transition-colors" onClick={handleSignOut}>
+                    <Dropdown.Item 
+                      key="logout" 
+                      textValue="Logout" 
+                      variant="danger" 
+                      className="hover:bg-red-500/10 text-red-600 rounded-xl p-2 transition-colors"
+                    >
                       <div className="flex items-center gap-2.5 text-xs font-semibold">
                         <BiLogOut className="w-4 h-4" />
                         <Label className="cursor-pointer">Logout</Label>
                       </div>
                     </Dropdown.Item>
+                    
                   </Dropdown.Menu>
                 </Dropdown.Popover>
               </Dropdown>
@@ -151,20 +185,30 @@ const Navbar = () => {
           <div className="border-t border-[#dfcbaf] md:hidden bg-[#ebdcc9] rounded-b-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
             <ul className="flex flex-col gap-1 p-4 text-xs font-bold uppercase tracking-wide">
               <li>
-                <Link href="/" className="block py-2 px-3 rounded-xl hover:bg-[#2c221e]/5">Features</Link>
+                <Link href="/" className="block py-2 px-3 rounded-xl hover:bg-[#2c221e]/5">Home</Link>
               </li>
-              <li>
-                <Link href="/dashboard" className="block py-2 px-3 rounded-xl text-[#2c221e] bg-[#2c221e]/5">Dashboard</Link>
-              </li>
-              <li>
-                <Link href="#" className="block py-2 px-3 rounded-xl hover:bg-[#2c221e]/5">Pricing</Link>
-              </li>
-              <li className="mt-2 pt-3 border-t border-[#dfcbaf] flex flex-col gap-2">
-                <Link href="/signin" className="block py-2 text-center hover:bg-[#2c221e]/5 rounded-xl">Login</Link>
-                <Button className="w-full bg-[#2c221e] text-[#ebdcc9] font-bold text-xs uppercase tracking-wider h-10" radius="xl">
-                  Sign Up
-                </Button>
-              </li>
+              {user && (
+                <li>
+                  <Link href={`/dashboard/${user?.role}`} className="block py-2 px-3 rounded-xl text-[#2c221e] bg-[#2c221e]/5">Dashboard</Link>
+                </li>
+              )}
+              
+              {!user ? (
+                <li className="mt-2 pt-3 border-t border-[#dfcbaf] flex flex-col gap-2">
+                  <Link href="/signin" className="block py-2 text-center hover:bg-[#2c221e]/5 rounded-xl">Login</Link>
+                  <Link href="/signup">
+                    <Button className="w-full bg-[#2c221e] text-[#ebdcc9] font-bold text-xs uppercase tracking-wider h-10" radius="xl">
+                      Sign Up
+                    </Button>
+                  </Link>
+                </li>
+              ) : (
+                <li className="mt-2 pt-3 border-t border-[#dfcbaf]">
+                  <Button onClick={handleSignOut} className="w-full bg-red-600 text-white font-bold text-xs uppercase tracking-wider h-10" radius="xl">
+                    Logout
+                  </Button>
+                </li>
+              )}
             </ul>
           </div>
         )}
