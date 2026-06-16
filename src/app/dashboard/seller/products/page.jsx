@@ -1,3 +1,4 @@
+import DashbordHeading from '@/components/dashboard/DashbordHeading'
 import AddProductModal from '@/components/dashboard/seller/addProductsModal'
 import { getProducts } from '@/lib/api/products'
 import React from 'react'
@@ -7,7 +8,8 @@ const ProductsSellerPage = async() => {
     // console.log(products)
     return (
         <div className='flex justify-between items-center'>
-            <h1 className='text-3xl font-bold '>Products</h1>
+            <DashbordHeading title={'Products'} description={'Seller Add your Prodcuts'}/>
+            
             <AddProductModal/>
         </div>
     )

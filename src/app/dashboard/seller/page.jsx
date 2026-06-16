@@ -4,7 +4,7 @@ import React from 'react'
 const SellerHomePage = () => {
     return (
         <div>
-            <DashbordHeading title={'OverView'} description={'Dashboard Overview'} />
+            <DashbordHeading title={'OverView'} description={'Seller Dashboard Overview'} />
         </div>
     )
 }

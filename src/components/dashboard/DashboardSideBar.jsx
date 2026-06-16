@@ -26,7 +26,7 @@ export default function DashboardSideBar() {
         ],
         buyer: [
             { icon: ChartArea, label: "Overview", link: "/dashboard/buyer" },
-            { icon: TbAsset, label: "Products", link: "/dashboard/buyer/products" },
+            { icon: TbAsset, label: "Add-Products", link: "/dashboard/buyer/add-products" },
             { icon: BiMoney, label: "Transaction", link: "/dashboard/buyer/transaction" },
         ],
         admin: [
