@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "TechBazaar | Premium Tech Ecosystem",
+  title: "shanto | Premium  Ecosystem",
   description: "Explore the next generation of gadgets and software ecosystem.",
 };
 
@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
         <header className="relative z-50 border-b border-[#dfcbaf] bg-[#ebdcc9]">
           <Navbar />
         </header>
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+        <main className="flex-1  w-full mx-auto  py-8 relative z-10">
           {children}
         </main>
         <footer className="relative z-10 border-t border-[#dfcbaf] bg-[#ebdcc9]">

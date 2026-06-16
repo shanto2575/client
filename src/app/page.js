@@ -1,6 +1,7 @@
 import Hero from "@/components/Banner";
 import BannerSlider from "@/components/Banner";
 import Statistics from "@/components/Statistics";
+import Testimonials from "@/components/Testimonials";
 import WhyChoose from "@/components/WhyChoose";
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
         <Hero />
         <WhyChoose/>
         <Statistics stats={state}/>
+        <Testimonials/>
       </section>
     </div>
   );
